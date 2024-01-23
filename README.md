@@ -46,9 +46,13 @@ Import example Postgres dashboard:
 2) Download JSON.  (Also available at ./resources/postgres_9628_rev7.json)
 3) Import as above.
 
-### Run Spring Boot Application
+### Spring Boot Application
 
-The Spring Boot application connects to the Kafka and Postgres instances.  A REST endpoint is provided that causes the application to produce events, consume these events, and write records to the database.
+The Spring Boot application connects to the Kafka and Postgres instances.  A REST endpoint is provided that when called triggers the application to produce events.  The application then consume these events, and writes corresponding records to the database.
+
+![Demo Application](monitoring-demo.png)
+
+To build and run the application:
 
 1) Build the application:  `mvn clean install`
 2) Run the application: `java -jar target/monitoring-demo-1.0.0.jar`
