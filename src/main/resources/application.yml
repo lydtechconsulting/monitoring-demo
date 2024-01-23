@@ -1,0 +1,27 @@
+spring:
+    application:
+        name: kafka-demo
+    datasource:
+        driverClassName: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/postgres?currentSchema=demo
+        username: postgres
+        password: postgres
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        properties:
+            hibernate:
+                default_schema: demo
+        hibernate:
+            ddl-auto: validate
+        generate-ddl: false
+    data:
+        rest:
+            detection-strategy: annotated
+    flyway:
+        schemas: demo
+
+server:
+    port: 9001
+
+kafka:
+    bootstrap-servers: localhost:9092
