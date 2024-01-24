@@ -23,12 +23,16 @@ public class DemoConsumer {
     /**
      * Consumes events from any topic prefixed with "demo-".
      */
-    @KafkaListener(topicPattern = "demo-topic", groupId = "demo-consumer-group", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "demo-topic", groupId = "demo-consumer-group", containerFactory = "kafkaListenerContainerFactory")
     public void listen(@Payload String payload) {
-        counter.getAndIncrement();
-        itemService.createItem(counter.longValue(), payload);
-        if(counter.get() % 100 == 0){
-            log.info("Total events received (each 100): {}", counter.get());
+        try {
+            counter.getAndIncrement();
+            itemService.createItem(counter.longValue(), payload);
+            if (counter.get() % 1000 == 0) {
+                log.info("Total events received (each 1000): {}", counter.get());
+            }
+        } catch(Exception e) {
+            log.error("Unable to process event with payload [{}].  Error: {}", payload, e.getMessage());
         }
     }
 }

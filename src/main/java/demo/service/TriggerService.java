@@ -35,7 +35,7 @@ public class TriggerService {
         while (System.currentTimeMillis() < end) {
             sendEvent();
             counter++;
-            if (counter % 100 == 0) {
+            if (counter % 1000 == 0) {
                 log.info("Total events sent to topic: {}", counter);
             }
             TimeUnit.MILLISECONDS.sleep(request.getDelayMilliseconds());

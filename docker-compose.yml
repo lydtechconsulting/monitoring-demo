@@ -17,12 +17,12 @@ services:
             - zookeeper
         ports:
             - "9092:9092"
-            - "9093:9093"
+            - "29092:29092"
         environment:
             KAFKA_BROKER_ID: 1
             KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
             KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9093,PLAINTEXT_HOST://localhost:9092
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
             KAFKA_NUM_PARTITIONS: 3
             KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 3
             KAFKA_DEFAULT_REPLICATION_FACTOR: 1
@@ -37,10 +37,10 @@ services:
             retries: 10
 
     kafka-exporter:
-        image: danielqsj/kafka-exporter
+        image: danielqsj/kafka-exporter:v1.7.0
         hostname: kafka-exporter
         container_name: kafka-exporter
-        command: --kafka.server=kafka:9093
+        command: --kafka.server=kafka:29092
         ports:
             - 9308:9308
         depends_on:
@@ -51,8 +51,9 @@ services:
             - prometheus
 
     postgres:
-        container_name: postgres
         image: postgres:14.1-alpine
+        hostname: postgres
+        container_name: postgres
         environment:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
@@ -60,10 +61,13 @@ services:
         ports:
             - '5432:5432'
         volumes:
-            - postgres:/var/lib/postgresql/data
+            - /var/lib/postgresql/data
+#            - postgres:/var/lib/postgresql/data
 
     postgres-exporter:
-        image: prometheuscommunity/postgres-exporter
+        image: prometheuscommunity/postgres-exporter:v0.15.0
+        hostname: postgres-exporter
+        container_name: postgres-exporter
         ports:
             - 9187:9187
         environment:
@@ -73,20 +77,37 @@ services:
             - prometheus
 
     prometheus:
-        image: prom/prometheus:latest
+        image: prom/prometheus:v2.49.1
+        hostname: prometheus
         container_name: prometheus
         volumes:
-            - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+            - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+            - ./config/rules.yml:/etc/prometheus/rules.yml
         ports:
             - "9090:9090"
         depends_on:
-#            - kafka
+            - kafka
             - postgres
 
     grafana:
-        image: grafana/grafana
+        image: grafana/grafana:10.2.3
+        hostname: grafana
+        container_name: grafana
         ports:
             - 3000:3000
+        volumes:
+          - 'grafana_storage:/var/lib/grafana'
 
+    alertmanager:
+        image: prom/alertmanager:v0.26.0
+        hostname: alertmanager
+        container_name: alertmanager
+        ports:
+            - "9093:9093"
+        volumes:
+            - ./config/alertmanager.yml:/alertmanager/alertmanager.yml
+
+#volumes:
+#    postgres: {}
 volumes:
-    postgres: {}
+    grafana_storage: {}
