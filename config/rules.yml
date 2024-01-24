@@ -4,6 +4,8 @@ groups:
     - alert: InstanceDown
       expr: up == 0
       for: 10s
+      labels:
+        severity: critical
       annotations:
         summary: "Instance {{ $labels.instance }} down"
         description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 10 seconds."
@@ -13,6 +15,8 @@ groups:
     - alert: LaggingConsumerGroup
       expr: kafka_consumergroup_lag > 100
       for: 10s
+      labels:
+        severity: warning
       annotations:
         summary: "Consumer group {{ $labels.consumergroup }} is lagging"
         description:  "Consumer group {{ $labels.consumergroup }} is lagging for topic {{ $labels.topic }} and partition {{ $labels.partition }}"

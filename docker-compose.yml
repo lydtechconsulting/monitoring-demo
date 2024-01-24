@@ -46,9 +46,6 @@ services:
         depends_on:
             kafka:
               condition: service_healthy
-        links:
-            - kafka
-            - prometheus
 
     postgres:
         image: postgres:14.1-alpine
@@ -62,7 +59,6 @@ services:
             - '5432:5432'
         volumes:
             - /var/lib/postgresql/data
-#            - postgres:/var/lib/postgresql/data
 
     postgres-exporter:
         image: prometheuscommunity/postgres-exporter:v0.15.0
@@ -72,9 +68,6 @@ services:
             - 9187:9187
         environment:
             DATA_SOURCE_NAME: "postgresql://postgres:postgres@postgres:5432/postgres?sslmode=disable"
-        links:
-            - postgres
-            - prometheus
 
     prometheus:
         image: prom/prometheus:v2.49.1
@@ -106,8 +99,7 @@ services:
             - "9093:9093"
         volumes:
             - ./config/alertmanager.yml:/alertmanager/alertmanager.yml
+        command: --config.file=/alertmanager/alertmanager.yml
 
-#volumes:
-#    postgres: {}
 volumes:
     grafana_storage: {}

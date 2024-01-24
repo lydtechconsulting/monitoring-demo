@@ -103,7 +103,7 @@ docker start postgres-exporter
 
 To trigger the Kafka alert, send in a large volume of events to the `demo-topic` (which the Spring Boot application consumes from) and observe the consumer lagging:
 ```
-curl -v -d '{"periodToSendSeconds":10, "delayMilliseconds":0}' -H "Content-Type: application/json" -X POST http://localhost:9001/v1/trigger
+curl -v -d '{"periodToSendSeconds":5, "delayMilliseconds":0}' -H "Content-Type: application/json" -X POST http://localhost:9001/v1/trigger
 ```
 
 The Spring Boot application logs out the events as it sends and consumes them, so the long period of time consuming the events can be verified there.
@@ -113,6 +113,16 @@ The Spring Boot application logs out the events as it sends and consumes them, s
 Navigate to Alertmanager at http://localhost:9093/ to view the alerts.
 
 Alternatively view the alerts firing in the Alertmanager Grafana dashboard (as configured above).
+
+#### Slack Integration
+
+Configure a Slack webhook endpoint for the workspace that will be called by Alertmanager with the alert notification:
+
+https://api.slack.com/messaging/webhooks
+
+Configure the slack integration in `config/alertmanager.yml`.  Enter the webhook URL for the `api_url`.
+
+When an alert is fired, a notification will appear in the configured Slack channel, in this case `#demo-alerts`. 
 
 ## Troubleshooting:
 
