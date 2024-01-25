@@ -5,6 +5,8 @@ import demo.service.TriggerService;
 import demo.util.TestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -47,5 +49,22 @@ public class TriggerControllerTest {
         ResponseEntity response = controller.trigger(request);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
         verify(serviceMock, times(1)).process(request);
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"10, 25, 202",
+            "10, 0, 202",
+            "10, NULL, 400",
+            "NULL, 25, 400",
+            "0, 25, 400",
+            "NULL, NULL, 400",
+    }, nullValues = "NULL")
+    void testTrigger_Validation(Integer periodToSendSeconds, Integer delayMilliseconds, Integer expectedHttpStatusCode) {
+        TriggerEventsRequest request = TriggerEventsRequest.builder()
+                .periodToSendSeconds(periodToSendSeconds)
+                .delayMilliseconds(delayMilliseconds)
+                .build();
+        ResponseEntity response = controller.trigger(request);
+        assertThat(response.getStatusCode().value(), equalTo(expectedHttpStatusCode));
     }
 }
