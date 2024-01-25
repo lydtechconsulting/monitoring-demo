@@ -1,9 +1,9 @@
 spring:
     application:
-        name: kafka-demo
+        name: monitoring-demo
     datasource:
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/postgres?currentSchema=demo
+        url: jdbc:postgresql://postgres:5432/postgres?currentSchema=demo
         username: postgres
         password: postgres
     jpa:
@@ -20,8 +20,21 @@ spring:
     flyway:
         schemas: demo
 
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+    endpoint:
+        metrics:
+            enabled: true
+    metrics:
+        export:
+            prometheus:
+                enabled: true
+
 server:
     port: 9001
 
 kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:29092

@@ -101,5 +101,15 @@ services:
             - ./config/alertmanager.yml:/alertmanager/alertmanager.yml
         command: --config.file=/alertmanager/alertmanager.yml
 
+    monitoring-demo-app:
+        image: monitoring-demo-app:latest
+        hostname: monitoring-demo-app
+        container_name: monitoring-demo-app
+        depends_on:
+            - postgres
+            - kafka
+        ports:
+            - '9001:9001'
+
 volumes:
     grafana_storage: {}

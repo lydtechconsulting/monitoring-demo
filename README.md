@@ -6,15 +6,27 @@ A Spring Boot application is used to generate Kafka events and perform Postgres 
 
 ## Monitoring and Alerting Demo
 
+### Build Spring Boot Application
+
+The Spring Boot application docker image should be built:
+```
+mvn clean install
+docker build -t monitoring-demo-app .
+```
+
+This image will be used when the docker containers are started in the next step.
+
 ### Start Containers
 
-Start Kafka, Zookeeper, Kafka exporter, Postgres, Postgres exporter, Prometheus, Grafana and Alertmanager:
+Start the Spring Boot application, Kafka, Zookeeper, Kafka exporter, Postgres, Postgres exporter, Prometheus, Grafana and Alertmanager:
 
 ```
 docker-compose up -d
 ```
 
-The exporters export metrics from Kafka and Postgres respectively for consumption by Prometheus.
+The exporters export metrics from Kafka and Postgres respectively for consumption by Prometheus.  The Spring Boot application metrics are also ingested by Prometheus using Spring Actuator and micrometer.  The metrics are visualised in Grafana dashboards.  Alertmanager raises alerts based on configured rules, and optionally notifies a Slack channel.
+
+![Docker Deployment](docker-deployment.png)
 
 ### Prometheus
 
@@ -52,6 +64,12 @@ Import example Alertmanager dashboard:
 2) Download JSON.  (Also available at ./dashboards/alertmanager_9578_rev4.json)
 3) Import as above.
 
+Import example Spring Boot application dashboard:
+
+1) Navigate to https://grafana.com/grafana/dashboards/19004-spring-boot-statistics/
+2) Download JSON.  (Also available at ./dashboards/springboot_19004_rev1.json)
+3) Import as above.
+
 ### Spring Boot Application
 
 The Spring Boot application connects to the Kafka and Postgres instances.  A REST endpoint is provided that when called triggers the application to produce events.  The application then consume these events, and writes corresponding records to the database.
@@ -60,8 +78,14 @@ The Spring Boot application connects to the Kafka and Postgres instances.  A RES
 
 To build and run the application:
 
-1) Build the application:  `mvn clean install`
-2) Run the application: `java -jar target/monitoring-demo-1.0.0.jar`
+1) Build the application:
+```
+mvn clean install
+```
+2) Run the application:
+```
+java -jar target/monitoring-demo-1.0.0.jar
+```
 3) Hit the REST endpoint to generate events, specifying the period to send events for, and the delay in milliseconds between each send:
 ```
  curl -v -d '{"periodToSendSeconds":60, "delayMilliseconds":100}' -H "Content-Type: application/json" -X POST http://localhost:9001/v1/trigger
@@ -96,7 +120,7 @@ To trigger the health check alert, stop the Postgres exporter container instance
 ```
 docker stop postgres-exporter
 ```
-Restart the container with:
+Once the alert has been raised the container can be restarted with:
 ```
 docker start postgres-exporter
 ```
@@ -106,7 +130,7 @@ To trigger the Kafka alert, send in a large volume of events to the `demo-topic`
 curl -v -d '{"periodToSendSeconds":5, "delayMilliseconds":0}' -H "Content-Type: application/json" -X POST http://localhost:9001/v1/trigger
 ```
 
-The Spring Boot application logs out the events as it sends and consumes them, so the long period of time consuming the events can be verified there.
+The Spring Boot application logs out the events as it sends and consumes them, so the long period of time spent consuming the events can be verified there.
 
 #### View Alerts
 
@@ -120,7 +144,7 @@ Configure a Slack webhook endpoint for the workspace that will be called by Aler
 
 https://api.slack.com/messaging/webhooks
 
-Configure the slack integration in `config/alertmanager.yml`.  Enter the webhook URL for the `api_url`.
+Configure the slack integration in `config/alertmanager.yml`.  Comment in the configuration for the `slack_configs`, and enter the correct webhook URL for the `api_url` parameter.
 
 When an alert is fired, a notification will appear in the configured Slack channel, in this case `#demo-alerts`. 
 
