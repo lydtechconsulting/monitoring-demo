@@ -12,7 +12,7 @@
 	<artifactId>monitoring-demo</artifactId>
 	<version>1.0.0</version>
 	<name>monitoring-demo</name>
-	<description>Spring Boot application demonstrating Kafka and Postgres monitoring using Prometheus and Grafana</description>
+	<description>Demonstrating monitoring Kafka, Postgres and a Spring Boot application using Prometheus, Grafana and Alertmanager</description>
 	<properties>
 		<java.version>17</java.version>
 		<maven.compiler.source>17</maven.compiler.source>
