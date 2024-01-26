@@ -6,7 +6,15 @@ A Spring Boot application is used to generate Kafka events and perform Postgres 
 
 ## Monitoring and Alerting Demo
 
-### Build Spring Boot Application
+### Spring Boot Application
+
+#### Overview
+
+A Spring Boot application is used to generate Kafka events and perform Postgres operations to demonstrate the metrics capture.  The application provides a REST endpoint that when called triggers the application to produce events.  The application then consume these events, and writes corresponding records to the database.
+
+![Demo Application](monitoring-demo.png)
+
+#### Build Application
 
 The Spring Boot application docker image should be built:
 ```
@@ -70,23 +78,9 @@ Import example Spring Boot application dashboard:
 2) Download JSON.  (Also available at ./dashboards/springboot_19004_rev1.json)
 3) Import as above.
 
-### Spring Boot Application
+### Generate Metrics
 
-The Spring Boot application connects to the Kafka and Postgres instances.  A REST endpoint is provided that when called triggers the application to produce events.  The application then consume these events, and writes corresponding records to the database.
-
-![Demo Application](monitoring-demo.png)
-
-To build and run the application:
-
-1) Build the application:
-```
-mvn clean install
-```
-2) Run the application:
-```
-java -jar target/monitoring-demo-1.0.0.jar
-```
-3) Hit the REST endpoint to generate events, specifying the period to send events for, and the delay in milliseconds between each send:
+Hit the REST endpoint on the Spring Boot application to generate events, specifying the period to send events for, and the delay in milliseconds between each send:
 ```
  curl -v -d '{"periodToSendSeconds":60, "delayMilliseconds":100}' -H "Content-Type: application/json" -X POST http://localhost:9001/v1/trigger
 ``` 
@@ -97,7 +91,7 @@ INFO  d.s.TriggerService - Sending events for 60 seconds
 INFO  d.s.TriggerService - Total events sent: 224
 ```
 
-Confirm the total events sent has resulted in this many item's being persisted:
+Confirm the total events sent has resulted in corresponding items being persisted for each:
 ```
 curl http://localhost:9001/v1/items/count
 ```
