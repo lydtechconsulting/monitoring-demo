@@ -41,7 +41,7 @@ Connect Grafana to the Prometheus data source:
 
 1) Navigate to http://localhost:3000/
 2) Login with the default credentials that have autocompleted.
-3) Get to Connections / Data sources / Add data source - select Prometheus.
+3) Go to Connections / Data sources / Add data source - select Prometheus.
 4) Enter the Prometheus URL: http://prometheus:9090 as the Connection URL.
 5) Click 'Save & test'.
 
