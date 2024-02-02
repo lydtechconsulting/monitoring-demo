@@ -1,8 +1,6 @@
 # Monitoring And Alerting
 
-Demonstrating monitoring and alerting Kafka, Postgres and a Spring Boot application using Prometheus, Grafana and Alertmanager.
-
-A Spring Boot application is used to generate Kafka events and perform Postgres operations to demonstrate the metrics capture.
+Demonstrating the monitoring and alerting of Kafka, Postgres and a Spring Boot application using Prometheus, Grafana and Alertmanager.  The Spring Boot application is used to generate Kafka events and perform Postgres operations to demonstrate the metrics capture.
 
 ## Monitoring and Alerting Demo
 
@@ -10,7 +8,7 @@ A Spring Boot application is used to generate Kafka events and perform Postgres 
 
 #### Overview
 
-A Spring Boot application is used to generate Kafka events and perform Postgres operations to demonstrate the metrics capture.  The application provides a REST endpoint that when called triggers the application to produce events.  The application then consume these events, and writes corresponding records to the database.
+The Spring Boot application provides a REST endpoint that when called triggers the application to produce events.  The application then consume these events, and writes corresponding records to the database.
 
 ![Demo Application](monitoring-demo.png)
 
