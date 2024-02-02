@@ -22,7 +22,7 @@ docker build -t monitoring-demo-app .
 
 This image will be used when the docker containers are started in the next step.
 
-### Start Containers
+### Start Docker Containers
 
 Start the Spring Boot application, Kafka, Zookeeper, Kafka exporter, Postgres, Postgres exporter, Prometheus, Grafana and Alertmanager:
 
