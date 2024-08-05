@@ -2,7 +2,7 @@
 
 Demonstrating the monitoring and alerting of Kafka, Postgres and a Spring Boot application using Prometheus, Grafana and Alertmanager.  The Spring Boot application is used to generate Kafka events and perform Postgres operations to demonstrate the metrics capture.
 
-This repo accompanies the following series of articles on Kafka Schema Registry with Avro serialisation:
+This repo accompanies the following series of articles on monitoring and alerting with Prometheus, Grafana, and Alertmanager:
 
 - [Prometheus, Grafana & Alertmanager - Part 1: Introduction](https://www.lydtechconsulting.com/blog-monitoring-demo-pt1.html): setting up a monitoring and alerting stack consisting of Prometheus, Grafana and Alertmanager.
 - [Prometheus, Grafana & Alertmanager - Part 2: Monitoring Demo](https://www.lydtechconsulting.com/blog-monitoring-demo-pt2.html): demonstrating monitoring Kafka, Postgres, and a Spring Boot application using Prometheus and Grafana.
